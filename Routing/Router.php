@@ -2,75 +2,41 @@
 
 declare(strict_types=1);
 
-/**
- * Router class
- */
-
 namespace Framework\Routing;
 
-use Framework\{
-	Routing\Route,
-	Exception\NotFoundHttpException
-};
+use Framework\Exception\NotFoundHttpException;
 
-/**
- * Router
- */
 class Router
 {
-	/**
-	 * 
-	 * @var array
-	 * @access private
-	 */
-	private $routes = [];
-	
-	/**
-	 * Add Route
-	 * @access public
-	 * @param Route $route
-     * 
-	 * @return void
-	 */
+	private array $routes = [];
+
 	public function addRoute(Route $route): void
 	{
-		if (!in_array($route, $this->routes)) {
-
+		if (!in_array($route, $this->routes, true)) {
 			$this->routes[] = $route;
 		}
 	}
-	
-	/**
-	 * Get Route match with url
-	 * @access public
-	 * @param string $url
-     * 
-	 * @return Route
-	 */
-	public function getRoute($url): ?Route
+
+    /**
+     * @throws NotFoundHttpException
+     */
+	public function getRoute(string $url): ?Route
 	{
 		foreach ($this->routes as $route) {
-
 			// If url match with Route url
 			if (($varsValues = $route->match($url)) !== false) {
-
 				// If route has vars, example : id
 				if ($route->hasVars()) {
-
 					// Get vars names
 					$varsNames = $route->getVarsNames();
 					$listVars = [];
-
 					foreach ($varsValues as $key => $match) {
-
 						// 0 contains complete url
 						if ($key !== 0) {
-
 							// Set array with names/values of vars
 							$listVars[$varsNames[$key - 1]] = $match;
 						}
 					}
-					
 					$route->setVars($listVars);
 				}
 	
@@ -82,20 +48,11 @@ class Router
         
 	}
 
-    /**
-     * Get url by route name
-     * @access public
-     * @param string $routeName
-     * @param array $param
-     * 
-     * @return string
-     */
-	public function getUrlByRouteName($routeName, array $param = []): string
+	public function getUrlByRouteName(string $routeName, array $param = []): string
 	{
 		foreach ($this->routes as $route) {
 
-			if ($route->getName() == $routeName) {
-
+			if ($route->getName() === $routeName) {
 				if ($route->hasVars()) {
 					$keysValues = array_keys($param);
 
@@ -103,22 +60,16 @@ class Router
 						$keysValues[$key] = '/(' . $value . ')/';
 					}
 
-					$url = preg_replace($keysValues, $param, $route->getMask());
-
-					return $url;
+					return preg_replace($keysValues, $param, $route->getMask());
 				}
 
 				return $route->getUrl();
 			}
 		}
+
+        return '';
 	}
 
-	/**
-	 * Load routes
-	 * @access public
-     * 
-	 * @return void
-	 */
 	public function loadRoutes(): void
 	{
 		$xml = new \DOMDocument();
@@ -132,7 +83,6 @@ class Router
 			
 			// If route has vars, example : id
 			if ($xmlRoute->hasAttribute('vars')) {
-
 				// Get vars names in array
 				$varsNames = explode(',', $xmlRoute->getAttribute('vars'));
             }

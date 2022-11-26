@@ -2,29 +2,13 @@
 
 declare(strict_types=1);
 
-/**
- * Paginator class
- */
-
 namespace Framework\Paginator;
 
-/**
- * Paginator
- */
 class Paginator
 {
-    /**
-     * Paginate
-     * @access public
-     * @param string $query
-     * @param int $page
-     * @param int $limit
-     * 
-     * @return string
-     */
     public function paginate(string $query, int $page, int $limit): string
     {
-        $page = ($page - 1);
+        --$page;
 
         if ($page < 0) {
             $page = 0;
@@ -32,9 +16,7 @@ class Paginator
 
         $offset = $page * $limit;
 
-        $limitQuery = ' LIMIT ' . $limit . ' OFFSET ' . $offset;
-
-        $query .= $limitQuery;
+        $query .= sprintf(' LIMIT %s OFFSET %s', $limit, $offset);
 
         return $query;
     }

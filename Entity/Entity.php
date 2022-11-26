@@ -2,43 +2,18 @@
 
 declare(strict_types=1);
 
-/**
- * Entity class
- */
-
 namespace Framework\Entity;
 
-/**
- * Entity
- * @abstract
- */
 abstract class Entity
 {
-    /**
-     * @var int
-     * @access protected
-     */
-    protected $id;
+    protected mixed $id;
 
-    /**
-     * Get id
-     * @access public
-     * 
-     * @return int
-     */
-    public function getId(): ?int
+    public function getId(): mixed
     {
         return $this->id;
     }
 
-    /**
-     * Set id
-     * @access public
-     * @param int $id
-     * 
-     * @return Entity
-     */
-    public function setId(int $id): Entity
+    public function setId(int $id): self
     {
         $this->id = $id;
 
