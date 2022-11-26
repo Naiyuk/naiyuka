@@ -2,50 +2,43 @@
 
 declare(strict_types=1);
 
-/**
- * TextField class
- */
-
 namespace Framework\Field;
 
-use Framework\Field\Field;
-
-/**
- * TextField
- */
 class TextField extends Field
 {
-	/**
-	 * {@inheritDoc}
-	 */
 	public function buildField(): string
 	{
 		$field = '';
 
 		if (!empty($this->label)) {
-			$field .= '<label class="control-label text-dark" for="'
-			    .$this->name.'">'.$this->label.'</label>';
+			$field .= sprintf(
+                '<label class="control-label text-dark" for="%s">%s</label>',
+                $this->name,
+                $this->label
+            );
 		}
 		
 		if (!empty($this->error)) {
-
-			$field .= '<span class="invalid-feedback d-block font-weight-bold">' . $this->error . '</span>';
+			$field .= sprintf(
+                '<span class="invalid-feedback d-block font-weight-bold">%s</span>',
+                $this->error
+            );
 		}
 
-		$field .= '<textarea class="form-control" id="'
-			. $this->name . '" name="' . $this->name . '"';
+		$field .= sprintf(
+            '<textarea class="form-control" id="%s" name="%s"',
+            $this->name,
+            $this->name
+        );
 
 		$field .= '>';
 
 		if (!empty($this->value)) {
-
 			$field .= htmlspecialchars($this->value);
 		}
 
 		$field .= '</textarea>';
 
-		$field = '<div class="form-group">' . $field . '</div>';
-
-		return $field;
+		return sprintf('<div class="form-group">%s</div>', $field);
 	}
 }

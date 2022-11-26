@@ -2,54 +2,23 @@
 
 declare(strict_types=1);
 
-/*
- * Captcha validator
- */
-
 namespace Framework\Validator;
 
 use ReCaptcha\ReCaptcha;
-use Framework\{
-    Http\Request,
-    Validator\Validator
-};
+use Framework\Http\Request;
 
-/**
- * CaptchaValidator
- */
 class CaptchaValidator extends Validator
 {
-    /**
-     * 
-     * @var Recaptcha
-     * @access private
-     */
-    private $captcha;
+    private Recaptcha $captcha;
 
-    /**
-     * 
-     * @var Request
-     * @access private
-     */
-    private $request;
-    
-    /**
-	 * Constructor
-     * @access public
-     * @param string $captchaKey
-     * @param Request $request
-     * 
-     * @return void
-	 */
+    private Request $request;
+
     public function __construct(string $captchaKey, Request $request)
     {
         $this->captcha = new ReCaptcha($captchaKey);
         $this->request = $request;
     }
 
-    /**
-	 * {@inheritDoc}
-	 */
     public function isValid($value): bool
     {
         $resp = $this->captcha->verify($value, $this->request->getIp());

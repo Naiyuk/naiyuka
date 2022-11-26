@@ -2,55 +2,25 @@
 
 declare(strict_types=1);
 
-/**
- * MySql database
- */
-
 namespace Framework\Database;
 
-/**
- * MySqlDatabase
- */
+use PDO;
+
 class MySqlDatabase
 {
-    /**
-     * @var \PDO
-     * @access private
-     */
-    private $pdo;
+    private PDO $pdo;
 
-    /**
-     * Constructor
-     * @access public
-     * @param string $dbHost
-     * @param string $dbName
-     * @param string $dbUsername
-     * @param string $dbPassword
-     * 
-     * @return void
-     */
-    public function __construct(string $dbHost, string $dbName, string $dbUsername, $dbPassword)
+    public function __construct(string $dbHost, string $dbName, string $dbUsername, string $dbPassword)
     {
-        $pdo = new \PDO(
-            'mysql:host=' . $dbHost . 
-            ';dbname=' . $dbName .
-            ';charset=utf8',
-            $dbUsername,
-            $dbPassword
-        );
+        $config = sprintf('mysql:host=%s;dbname=%s;charset=utf8', $dbHost, $dbName);
+        $pdo = new PDO($config, $dbUsername, $dbPassword);
 
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $this->pdo = $pdo;
     }
 
-    /**
-     * Get pdo
-     * @access public
-     * 
-     * @return \PDO
-     */
-    public function getPdo(): \PDO
+    public function getPdo(): PDO
     {
         return $this->pdo;
     }
